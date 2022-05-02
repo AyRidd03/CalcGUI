@@ -187,7 +187,7 @@ public class CalculatorGUI extends Application {
 
       // Set up scene and stage
       primaryStage.setScene(new Scene(root, 300, 300));
-      primaryStage.setTitle("JavaFX Calculator");
+      primaryStage.setTitle("Ayden's JavaFX Calculator");
       primaryStage.show();
    }
 

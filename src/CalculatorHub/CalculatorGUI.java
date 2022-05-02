@@ -15,183 +15,244 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
+/**
+ * @author Ayden
+ * 2 May 2022
+ * Creates a GUI for a Calculator with functioning buttons
+ */
 public class CalculatorGUI extends Application {
-   private TextField tfDisplay;    // display textfield
-   private Button[] btns;          // 16 buttons
-   private String[] btnLabels = {  // Labels of 16 buttons now 20 Buttons
-      "7", "8", "9", "+",
-      "4", "5", "6", "-",
-      "1", "2", "3", "x",
-      ".", "0", "=", "/",
-      "C", "<-", "^", "sqrt",
-      "MC", "MR", "M+", "M-"
-   };
-   // For computation
-   private double result = 0.0;      // Result of computation
-   private double memory = 0.0;		// Recalling of Computed memory
-   private String inStr = "0";  // Input number as String
-   private String mrStr = "0"; //Memory input as a String
-   // Previous operator: ' '(nothing), '+', '-', '*', '/', '='
-   private char lastOperator = ' ';
+	/**
+	 * display textfield
+	 */
+	private TextField tfDisplay;    // display textfield
+	/**
+	 * Array of Buttons to be used in the GUI
+	 */
+	private Button[] btns;          // 16 buttons
+	/**
+	 * Array of Labels for each individual buttons
+	 */
+	private String[] btnLabels = {  // Labels of 16 buttons now 20 Buttons
+			"7", "8", "9", "+",
+			"4", "5", "6", "-",
+			"1", "2", "3", "x",
+			".", "0", "=", "/",
+			"C", "<-", "^", "sqrt",
+			"MC", "MR", "M+", "M-"
+	};
+	// For computation
+	/**
+	 * results for computation
+	 */
+	private double result = 0.0;      // Result of computation
+	/**
+	 * to be stored for computed memory
+	 */
+	private double memory = 0.0;		// Recalling of Computed memory
+	/**
+	 * Input Number used as string for comparison purposes
+	 */
+	private String inStr = "0";  // Input number as String
+	// Previous operator: ' '(nothing), '+', '-', '*', '/', '='
+	/**
+	 * recalls the last operator for computation purposes
+	 */
+	private char lastOperator = ' ';
 
-   // Event handler for all the 16 Buttons
-   EventHandler handler = evt -> {
-      String currentBtnLabel = ((Button)evt.getSource()).getText();
-      switch (currentBtnLabel) {
-         // Number buttons
-         case "0": case "1": case "2": case "3": case "4":
-         case "5": case "6": case "7": case "8": case "9":
-            if (inStr.equals("0")) {
-               inStr = currentBtnLabel;  // no leading zero
-            } else {
-               inStr += currentBtnLabel; // append input digit
-            }
-            tfDisplay.setText(inStr);
-            // Clear buffer if last operator is '='
-            if (lastOperator == '=') {
-               result = 0;
-               lastOperator = ' ';
-            }
-            break;
-         case ".":
-        	 inStr += currentBtnLabel;
-        	 break;
+	// Event handler for all the 16 Buttons
+	/**
+	 * Handles the buttons and their interactions
+	 * User pushes '+', '-', '*', '/' or '=' button.
+	 * Perform computation on the previous result and the current input number,
+	 * based on the previous operator.
+	 */
+	EventHandler handler = evt -> {
+		String currentBtnLabel = ((Button)evt.getSource()).getText();
+		switch (currentBtnLabel) {
+		// Number buttons
+		case "0": case "1": case "2": case "3": case "4":
+		case "5": case "6": case "7": case "8": case "9":
+			if (inStr.equals("0")) {
+				inStr = currentBtnLabel;  // no leading zero
+			} else {
+				inStr += currentBtnLabel; // append input digit
+			}
+			tfDisplay.setText(inStr);
+			// Clear buffer if last operator is '='
+			if (lastOperator == '=') {
+				result = 0;
+				lastOperator = ' ';
+			}
+			break;
+		case ".":
+			inStr += currentBtnLabel;
+			break;
 
-         // Operator buttons: '+', '-', 'x', '/' and '='
-         case "+":
-            compute();
-            lastOperator = '+';
-            break;
-         case "-":
-            compute();
-            lastOperator = '-';
-            break;
-         case "x":
-            compute();
-            lastOperator = '*';
-            break;
-         case "/":
-            compute();
-            lastOperator = '/';
-            break;
-         case "=":
-            compute();
-            lastOperator = '=';
-            break;
-            
-         case "^":
-        	 compute();
-        	 lastOperator = '^';
-        	 break;
-         case "sqrt":
-        	 compute();
-        	 lastOperator = 's';
-        	 
+			// Operator buttons: '+', '-', 'x', '/' and '='
+		case "+":
+			compute();
+			lastOperator = '+';
+			break;
+		case "-":
+			compute();
+			lastOperator = '-';
+			break;
+		case "x":
+			compute();
+			lastOperator = '*';
+			break;
+		case "/":
+			compute();
+			lastOperator = '/';
+			break;
+		case "=":
+			compute();
+			lastOperator = '=';
+			break;
 
-         // Clear button
-         case "C":
-            result = 0;
-            inStr = "0";
-            lastOperator = ' ';
-            tfDisplay.setText("0");
-            break;
-            
-          // Memory button
-         case "MC":
-             memory = 0;
-        	 mrStr = "0";
-             break;
-         case "MR":
-        	    inStr = String.valueOf(memory);
-        	    tfDisplay.setText(memory + "");
-        	    break;
-         case "M+":
-                 memory += Double.parseDouble(inStr);
-                 mrStr = memory + "";
-                 break;
-         case "M-":
-                 memory -= Double.parseDouble(inStr);
-                 mrStr = memory + "";
-        	 break;
-        	 
-             
-        	 
-      }
-   };
+		case "^":
+			compute();
+			lastOperator = '^';
+			break;
+		case "sqrt":
+			//if the last operator isn't = then use the inStr value instead of result in your Math.sqrt method
+			if(lastOperator == '=')
+			{
+				//set inStr and the displaying text to the results of Math.sqrt
+				result = Math.sqrt(result);
+				//set the last operator to = because we just computed the sqrt root so we don't want the calculator waiting for another number to complete the equation
+			}else {
+				result = Math.sqrt(Double.parseDouble(inStr));
+			}
+			lastOperator = '=';
+			compute();
+			break;
 
-   // User pushes '+', '-', '*', '/' or '=' button.
-   // Perform computation on the previous result and the current input number,
-   // based on the previous operator.
-   private void compute() {
-      double inNum = Double.parseDouble(inStr);
-      inStr = "0";
-      if (lastOperator == ' ') {
-         result = inNum;
-      } else if (lastOperator == '+') {
-         result += inNum;
-      } else if (lastOperator == '-') {
-         result -= inNum;
-      } else if (lastOperator == '*') {
-         result *= inNum;
-      } else if (lastOperator == '/') {
-         result /= inNum;
-      } else if (lastOperator == '=') {
-         // Keep the result for the next operation
-      } else if (lastOperator == '^') {
-    	  result = Math.pow(result,inNum);
-      } else if (lastOperator == 's') {
-    	  result = Math.sqrt(result);
-      }
-      tfDisplay.setText(result + "");
-   }
 
-   // Setup the UI
-   @Override
-   public void start(Stage primaryStage) {
-      // Setup the Display TextField
-      tfDisplay = new TextField("0");
-      tfDisplay.setEditable(false);
-      tfDisplay.setAlignment(Pos.CENTER_RIGHT);
+			// Clear button
+		case "C":
+			result = 0;
+			inStr = "0";
+			lastOperator = ' ';
+			tfDisplay.setText("0");
+			break;
 
-      // Setup a GridPane for 4x4 Buttons now 5x4
-      int numCols = 4;
-      int numRows = 5;
-      GridPane paneButton = new GridPane();
-      paneButton.setPadding(new Insets(15, 0, 15, 0));  // top, right, bottom, left
-      paneButton.setVgap(5);  // Vertical gap between nodes
-      paneButton.setHgap(5);  // Horizontal gap between nodes
-      // Setup 4 columns of equal width, fill parent
-      ColumnConstraints[] columns = new ColumnConstraints[numCols];
-      for (int i = 0; i < numCols; ++i) {
-         columns[i] = new ColumnConstraints();
-         columns[i].setHgrow(Priority.ALWAYS) ;  // Allow column to grow
-         columns[i].setFillWidth(true);  // Ask nodes to fill space for column
-         paneButton.getColumnConstraints().add(columns[i]);
-      }
+			// Backspace
+		case "<-":
 
-      // Setup 16 Buttons and add to GridPane; and event handler
-      // Now 20
-      btns = new Button[20];
-      for (int i = 0; i < btns.length; ++i) {
-         btns[i] = new Button(btnLabels[i]);
-         btns[i].setOnAction(handler);  // Register event handler
-         btns[i].setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);  // full-width
-         paneButton.add(btns[i], i % numCols, i / numCols);  // control, col, row
-      }
+			tfDisplay.setText(inStr.substring(0, inStr.length() - 1));
+			inStr = inStr.substring(0, inStr.length() - 1);
+			if(inStr.isEmpty())
+			{
+				tfDisplay.setText("0");
+				inStr = "0";
+			}
+			break;
 
-      // Setup up the scene graph rooted at a BorderPane (of 5 zones)
-      BorderPane root = new BorderPane();
-      root.setPadding(new Insets(15, 15, 15, 15));  // top, right, bottom, left
-      root.setTop(tfDisplay);     // Top zone contains the TextField
-      root.setCenter(paneButton); // Center zone contains the GridPane of Buttons
+			// Memory button
+		case "MC":
+			memory = 0;
+			mrStr = "0";
+			break;
+		case "MR":
+			inStr = String.valueOf(memory);
+			tfDisplay.setText(memory + "");
+			break;
+		case "M+":
+			memory += Double.parseDouble(inStr);
+			mrStr = memory + "";
+			break;
+		case "M-":
+			memory -= Double.parseDouble(inStr);
+			mrStr = memory + "";
+			break;
 
-      // Set up scene and stage
-      primaryStage.setScene(new Scene(root, 300, 300));
-      primaryStage.setTitle("Ayden's JavaFX Calculator");
-      primaryStage.show();
-   }
 
-   public static void main(String[] args) {
-      launch(args);
-   }
+
+		}
+	};
+
+	// User pushes '+', '-', '*', '/' or '=' button.
+	// Perform computation on the previous result and the current input number,
+	// based on the previous operator.
+	/**
+	 * computes the results based on the operator input, except sqrt, which is hard coded into the button.
+	 */
+	private void compute() {
+		double inNum = Double.parseDouble(inStr);
+		inStr = "0";
+		if (lastOperator == ' ') {
+			result = inNum;
+		} else if (lastOperator == '+') {
+			result += inNum;
+		} else if (lastOperator == '-') {
+			result -= inNum;
+		} else if (lastOperator == '*') {
+			result *= inNum;
+		} else if (lastOperator == '/') {
+			result /= inNum;
+		} else if (lastOperator == '=') {
+			// Keep the result for the next operation
+		} else if (lastOperator == '^') {
+			result = Math.pow(result,inNum);
+		}
+		tfDisplay.setText(result + "");
+	}
+
+	// Setup the UI
+	/**
+	 * Performs the UI setup and the parameters
+	 */
+	@Override
+	public void start(Stage primaryStage) {
+		// Setup the Display TextField
+		tfDisplay = new TextField("0");
+		tfDisplay.setEditable(false);
+		tfDisplay.setAlignment(Pos.CENTER_RIGHT);
+
+		// Setup a GridPane for 4x4 Buttons now 5x4
+		int numCols = 4;
+		int numRows = 5;
+		GridPane paneButton = new GridPane();
+		paneButton.setPadding(new Insets(15, 0, 15, 0));  // top, right, bottom, left
+		paneButton.setVgap(5);  // Vertical gap between nodes
+		paneButton.setHgap(5);  // Horizontal gap between nodes
+		// Setup 4 columns of equal width, fill parent
+		ColumnConstraints[] columns = new ColumnConstraints[numCols];
+		for (int i = 0; i < numCols; ++i) {
+			columns[i] = new ColumnConstraints();
+			columns[i].setHgrow(Priority.ALWAYS) ;  // Allow column to grow
+			columns[i].setFillWidth(true);  // Ask nodes to fill space for column
+			paneButton.getColumnConstraints().add(columns[i]);
+		}
+
+		// Setup 16 Buttons and add to GridPane; and event handler
+		// Now 20
+		btns = new Button[20];
+		for (int i = 0; i < btns.length; ++i) {
+			btns[i] = new Button(btnLabels[i]);
+			btns[i].setOnAction(handler);  // Register event handler
+			btns[i].setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);  // full-width
+			paneButton.add(btns[i], i % numCols, i / numCols);  // control, col, row
+		}
+
+		// Setup up the scene graph rooted at a BorderPane (of 5 zones)
+		BorderPane root = new BorderPane();
+		root.setPadding(new Insets(15, 15, 15, 15));  // top, right, bottom, left
+		root.setTop(tfDisplay);     // Top zone contains the TextField
+		root.setCenter(paneButton); // Center zone contains the GridPane of Buttons
+
+		// Set up scene and stage
+		primaryStage.setScene(new Scene(root, 300, 300));
+		primaryStage.setTitle("Ayden's JavaFX Calculator");
+		primaryStage.show();
+	}
+
+	/**
+	 * Main void to launch the program
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		launch(args);
+	}
 }

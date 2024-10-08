@@ -1,4 +1,4 @@
-This is a Calculator with a GUI for users that allows for basic computations. \n
+This is a Calculator with a GUI for users that allows for basic computations. /n
 The User should be able to:
 - Add
 - Subtract
